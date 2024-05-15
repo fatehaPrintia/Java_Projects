@@ -1,7 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
-
-public class login extends JFrame{
+import java.awt.event.ActionListener;
+import java.awt.event.*;
+public class login extends JFrame implements ActionListener{
+    JButton rules;
+    JTextField tfname;
     login(){
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
@@ -26,7 +29,7 @@ public class login extends JFrame{
         add(id);
 
 
-        JTextField tfname =new JTextField();
+        tfname =new JTextField();
         tfname.setBounds(680,200,200,25);
         tfname.setFont(new Font("Times New Roman",Font.BOLD,17));
         add(tfname);
@@ -34,10 +37,12 @@ public class login extends JFrame{
 
         //buttons
 
-        JButton rules =new JButton("Rules");
+        rules =new JButton("Rules");
         rules.setBounds(720,270,120,25);
         /*rules.setBackground(Color.BLUE);
         rules.setForeground(Color.black);*/
+
+        rules.addActionListener(this);
         add(rules);
 
 
@@ -46,6 +51,7 @@ public class login extends JFrame{
 //        back.setBounds(820,390,120,25);
 //        /*rules.setBackground(Color.BLUE);
 //        rules.setForeground(Color.black);*/
+//        rules.addActionListener(this);
 //        add(back);
 
 
@@ -54,6 +60,19 @@ public class login extends JFrame{
         setSize(1000,500);
         setLocation(180,200);
         setVisible(true);
+    }
+    public void actionPerformed(ActionEvent ae){
+        if (ae.getSource()==rules){
+            String id = tfname.getText();
+            setVisible(false);
+            new Rules(id);
+
+        }
+//        else if (ae.getSource()==back){
+//        setVisible(false);
+//
+//        }
+
     }
     public static void main(String[] args){
         new login();

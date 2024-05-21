@@ -60,6 +60,8 @@ public class Rules extends JFrame implements ActionListener{
     }
     public void actionPerformed(ActionEvent ae){
         if (ae.getSource()==Start){
+            setVisible(false);
+            new quiz(id);
 //            String id = tfname.getText();
 //            setVisible(false);
 //            new Rules(id);

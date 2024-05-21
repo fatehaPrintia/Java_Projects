@@ -1,19 +1,23 @@
 import javax.swing.*;
 import java.awt.*;
-public class quiz extends JFrame {
+import java.awt.event.*;
+
+public class quiz extends JFrame implements ActionListener{
     String questions[][]=new String[10][5];
     String answers[][]=new String[10][2];
     String useranswer[][]=new String[10][1];
     JLabel qno,question;
     JRadioButton opt1,opt2,opt3,opt4;
     ButtonGroup group_options;
-
+    JButton next,submit,Lifeline;
     public static int count =0;
     public static int timer=30;
     public static int ans_gives=0;
+    public static int score=0;
 
-
-    quiz(){
+    String id;
+    quiz(String id){
+        this.id=id;
         setBounds(0,0,1400,850);
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
@@ -142,30 +146,33 @@ public class quiz extends JFrame {
         group_options.add(opt4);
 
 
-        JButton next =new JButton("Next");
+        next =new JButton("Next");
         next.setBounds(1100,450,200,40);
         next.setFont(new Font("Tahoma",Font.PLAIN,22));
         next.setBackground(new Color(20,144,255));
         next.setForeground(Color.WHITE);
+        next.addActionListener(this);
         add(next);
 
 
-        JButton Lifeline =new JButton("50-50 Lifeline");
+        Lifeline =new JButton("50-50 Lifeline");
         Lifeline.setBounds(1100,530,200,40);
         Lifeline.setFont(new Font("Tahoma",Font.PLAIN,22));
         Lifeline.setBackground(new Color(20,144,255));
         Lifeline.setForeground(Color.WHITE);
+        Lifeline.addActionListener(this);
         add(Lifeline);
 
 
 
 
-        JButton submit =new JButton("submit");
+        submit =new JButton("submit");
         submit.setBounds(1100,610,200,40);
         submit.setFont(new Font("Tahoma",Font.PLAIN,22));
         submit.setBackground(new Color(20,144,255));
         submit.setForeground(Color.WHITE);
         submit.setEnabled(false);
+        submit.addActionListener(this);
         add(submit);
 
 
@@ -176,6 +183,63 @@ public class quiz extends JFrame {
 
         setVisible(true);
 
+
+    }
+    public void actionPerformed(ActionEvent ae){
+        if (ae.getSource()==next){
+            repaint();
+            opt1.setEnabled(true);
+            opt2.setEnabled(true);
+            opt3.setEnabled(true);
+            opt4.setEnabled(true);
+
+            ans_gives=1;
+            if (group_options.getSelection()==null){
+                useranswer[count][0]="";
+
+
+
+            }else{
+                useranswer[count][0]=group_options.getSelection().getActionCommand();
+
+            }
+            if (count==8){
+                next.setEnabled(false);
+                submit.setEnabled(true);
+            }
+
+            count++;
+            start(count);
+
+        }else if (ae.getSource()==Lifeline){
+            if (count==2 || count==4 ||count==6 || count==8 ||count==9 ){
+                opt2.setEnabled(false);
+                opt3.setEnabled(false);
+            }else{
+                opt1.setEnabled(false);
+                opt4.setEnabled(false);
+
+            }
+            Lifeline.setEnabled(false);
+
+        }else if(ae.getSource()==submit){
+            ans_gives=1;
+            if (group_options.getSelection()==null){
+                useranswer[count][0]="";
+
+            }else{
+                useranswer[count][0]=group_options.getSelection().getActionCommand();
+
+            }
+            for (int i=0; i<useranswer.length;i++){
+                if(useranswer[i][0].equals(answers[i][1])){
+                    score+=10;
+                }
+            }
+            setVisible(false);
+            new score(id,score);
+
+        }
 
     }
     public void paint(Graphics g){
@@ -205,10 +269,41 @@ public class quiz extends JFrame {
 
         }else if (timer<0){
             timer=30;
+            opt1.setEnabled(true);
+            opt2.setEnabled(true);
+            opt3.setEnabled(true);
+            opt4.setEnabled(true);
+
+            if (count==8){
+                next.setEnabled(false);
+                submit.setEnabled(true);
+            }
+
+            if(count==9){
+                if (group_options.getSelection()==null){
+                    useranswer[count][0]="";
+
+                }else{
+                    useranswer[count][0]=group_options.getSelection().getActionCommand();
+
+                }
+                for (int i=0; i<useranswer.length;i++){
+                    if(useranswer[i][0].equals(answers[i][1])){
+                        score+=10;
+                    }
+                }
+                setVisible(false);  //score
+                new score(id,score);
+
+                                                 //submit
+
+            }else{                //next button
+
+            }
+
+
             if (group_options.getSelection()==null){
                 useranswer[count][0]="";
-
-
 
             }else{
                 useranswer[count][0]=group_options.getSelection().getActionCommand();
@@ -223,13 +318,21 @@ public class quiz extends JFrame {
         qno.setText(""+(count+1)+". ");
         question.setText(questions[count][0]);
         opt1.setText(questions[count][1]);
-        opt2.setText(questions[count][1]);
-        opt3.setText(questions[count][1]);
-        opt4.setText(questions[count][1]);
+        opt1.setActionCommand(questions[count][1]);
+
+        opt2.setText(questions[count][2]);
+        opt2.setActionCommand(questions[count][2]);
+
+        opt3.setText(questions[count][3]);
+        opt3.setActionCommand(questions[count][3]);
+
+        opt4.setText(questions[count][4]);
+        opt4.setActionCommand(questions[count][4]);
+        group_options.clearSelection();
 
 
     }
     public static void main(String[] args) {
-        new quiz();
+        new quiz("User");
     }
 }
